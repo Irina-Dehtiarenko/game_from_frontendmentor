@@ -6,6 +6,9 @@
   --color-points: hsl(229, 25%, 31%);
   --color-score: hsl(229, 64%, 46%);
   --color-border: hsl(217, 16%, 45%);
+  --color-scissors: hsl(39, 89%, 49%), hsl(40, 84%, 53%);
+  --color-paper: hsl(230, 89%, 62%), hsl(230, 89%, 65%);
+  --color-rock: hsl(349, 71%, 52%), hsl(349, 70%, 56%);
 }
 
 * {
@@ -25,7 +28,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 12px 24px;
   border: solid 2px var(--color-border);
@@ -57,4 +60,101 @@ h1 span {
   font-size: 54px;
   color: var(--color-points);
   line-height: 42px;
+}
+
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 160px 0;
+}
+
+.options {
+  aspect-ratio: 313 / 278;
+  /* stosunek wysokości do szerokości będzie zawsze taki sam, nawet gdy zmieniamy rozmiar okna*/
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  background-image: url("./images/bg-triangle.svg");
+  background-size: cover;
+}
+
+.options .button {
+  position: absolute;
+  width: 50%;
+  cursor: pointer;
+}
+.button {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 50%;
+}
+
+.button img {
+  width: 50%;
+}
+.button__image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+  background-color: var(--color-main);
+  box-shadow: inset 0px 6px 0px rgba(0, 0, 0, 0.15);
+  /* cień od góry */
+  border-radius: 50%;
+}
+.button--paper {
+  background: linear-gradient(var(--color-paper));
+}
+.button--scissors {
+  background: linear-gradient(var(--color-scissors));
+}
+.button--rock {
+  background: linear-gradient(var(--color-rock));
+}
+.options .button--paper {
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  /* procentowo odnosi siędo elementu, który pozycjonujemy*/
+}
+.options .button--scissors {
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+}
+.options .button--rock {
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+.fight {
+  display: flex;
+  color: var(--color-main);
+}
+.fight .button {
+  width: 70%;
+}
+.pick {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 50%;
+}
+.pick__title {
+  display: block;
+  width: 100%;
+  padding-bottom: 36px;
+  text-align: center;
+}
+.pick__placeholder {
+  aspect-ratio: 1 / 1;
+  width: 50%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
 }
