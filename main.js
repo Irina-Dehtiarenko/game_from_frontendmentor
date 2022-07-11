@@ -6,6 +6,12 @@
 const playerWinsLSKey = "playerWins";
 const AIWinsLSKey = "AIWins";
 
+const winningResultsMap = {
+  paper: ["rock"],
+  rock: ["scissors"],
+  scissors: ["paper"],
+};
+
 let state = {
   playerWins: localStorage.getItem(playerWinsLSKey) || 0,
   AIWins: localStorage.getItem(AIWinsLSKey) || 0,
@@ -22,6 +28,13 @@ const renderScore = () => {
   //    pointsElement.textContent = `${state.playerWins - state.AIWins}`;
 };
 
+const pick = (e) => {
+  pickByPlayer(e.currentTarget.dataset.pick);
+  pickByAI();
+  hideOptions();
+  showFight();
+};
+
 const pickByPlayer = (pickedOption) => {
   //dodajemy wybór gracza
   state = {
@@ -29,6 +42,7 @@ const pickByPlayer = (pickedOption) => {
     playerPick: pickedOption,
   };
 };
+
 const pickByAI = () => {
   const options = ["paper", "scissors", "rock"];
   const AIPick = options[Math.floor(Math.random() * options.length)];
@@ -41,19 +55,69 @@ const pickByAI = () => {
   //   const index = Math.floor(Math.random() * options.length);
   //   return options[index];
 };
+
+const hideOptions = () => {
+  document.querySelector(".options").classList.add("hidden");
+};
+
+const createPickElement = (option) => {
+  const pickElement = document.createElement("div");
+  pickElement.classList.add("button", `button--${option}`);
+
+  const imageContainerElement = document.createElement("div");
+  imageContainerElement.classList.add("button__image-container");
+
+  const imgElement = document.createElement("img");
+  imgElement.src = `./images/icon-${option}.svg`;
+  imgElement.alt = option;
+
+  imageContainerElement.appendChild(imgElement);
+  pickElement.appendChild(imageContainerElement);
+
+  return pickElement;
+};
+
+const createElementPickedByPlayer = () => {
+  const playerPick = state.playerPick;
+
+  const pickContainerElement = document.querySelector(
+    ".pick__container--player"
+  );
+  pickContainerElement.innerHTML = ""; //reset HTML
+  pickContainerElement.appendChild(createPickElement(playerPick));
+};
+
+const createElementPickedByAI = () => {
+  const AIPick = state.AIPick;
+
+  const pickContainerElement = document.querySelector(".pick__container--ai");
+  pickContainerElement.innerHTML = ""; //reset HTML
+  pickContainerElement.appendChild(createPickElement(AIPick));
+};
+
+const showResult = () => {
+  // console.log(winningResultsMap[state.playerPick]); // zwraca - ['paper']
+
+  if (state.AIPick === state.playerPick) {
+    console.log("draw");
+  } else if (winningResultsMap[state.playerPick].includes(state.AIPick)) {
+    console.log("Player wins");
+  } else {
+    console.log("AI wins");
+  }
+};
+
+const showFight = () => {
+  document.querySelector(".fight").classList.remove("hidden");
+  createElementPickedByPlayer();
+  createElementPickedByAI();
+
+  showResult();
+};
+
 const bindPickEvents = () => {
   document.querySelectorAll(".options button").forEach((button) => {
-    button.addEventListener("click", (e) => {
-      //   debugger;
-      // przeprowadź analizę działania programu zawierających bugi, przejdź do kolejnych wywołań, itp.
-
-      //   console.log(e.target);-element dziecka w który dokładnie kliknęliśmy,
-      //   console.log(e.currentTarget);//teraz zwraca button
-      //   console.log(e.currentTarget.dataset.pick); //to zwraca wartość atributa data elementu w który kliknęliśmy
-      pickByPlayer(e.currentTarget.dataset.pick);
-      pickByAI();
-      console.log(state);
-    });
+    button.addEventListener("click", pick);
   });
 };
 

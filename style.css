@@ -137,7 +137,10 @@ main {
   display: flex;
   color: var(--color-main);
 }
-.fight .button {
+/* .fight .button {
+  width: 70%;
+} */
+.pick__container {
   width: 70%;
 }
 .pick {
@@ -158,4 +161,8 @@ main {
   width: 50%;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.15);
+}
+
+.hidden {
+  display: none;
 }
