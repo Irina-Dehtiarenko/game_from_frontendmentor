@@ -1,7 +1,7 @@
-//stworzyć stan - state
-//w stanie score
-//player pick
-//ai pick
+// state
+//   score
+//   player pick
+//   ai pick
 
 const playerWinsLSKey = "playerWins";
 const AIWinsLSKey = "AIWins";
@@ -13,19 +13,23 @@ const winningResultsMap = {
 };
 
 let state = {
-  playerWins: localStorage.getItem(playerWinsLSKey) || 0,
-  AIWins: localStorage.getItem(AIWinsLSKey) || 0,
+  playerWins: Number(localStorage.getItem(playerWinsLSKey)) || 0,
+  AIWins: Number(localStorage.getItem(AIWinsLSKey)) || 0,
   playerPick: null,
   AIPick: null,
 };
-// localStorage.getItem(AIWinsLSKey) - tak się dodaję
-// localStorage.setItem(playerWinsLSKey, 8) - tak się wywołuje
+
 const renderScore = () => {
-  //wpisuje wynik
   const pointsElement = document.querySelector(".points");
   pointsElement.innerText = state.playerWins - state.AIWins;
-  //   albo po mojemu
-  //    pointsElement.textContent = `${state.playerWins - state.AIWins}`;
+};
+
+const bindPickEvents = () => {
+  document.querySelectorAll(".options button").forEach((button) => {
+    button.addEventListener("click", pick);
+  });
+
+  document.querySelector(".result__button").addEventListener("click", reset);
 };
 
 const pick = (e) => {
@@ -36,7 +40,6 @@ const pick = (e) => {
 };
 
 const pickByPlayer = (pickedOption) => {
-  //dodajemy wybór gracza
   state = {
     ...state,
     playerPick: pickedOption,
@@ -44,37 +47,63 @@ const pickByPlayer = (pickedOption) => {
 };
 
 const pickByAI = () => {
-  const options = ["paper", "scissors", "rock"];
+  const options = ["rock", "paper", "scissors"];
   const AIPick = options[Math.floor(Math.random() * options.length)];
+
   state = {
-    //doddajemy wybór komputera - losowy
     ...state,
     AIPick,
   };
-  //Mój wariant
-  //   const index = Math.floor(Math.random() * options.length);
-  //   return options[index];
 };
 
 const hideOptions = () => {
-  document.querySelector(".options").classList.add("hidden");
+  const optionsElement = document.querySelector(".options");
+  optionsElement.classList.add("slide-left");
 };
 
-const createPickElement = (option) => {
-  const pickElement = document.createElement("div");
-  pickElement.classList.add("button", `button--${option}`);
+const showFight = () => {
+  const fightElement = document.querySelector(".fight");
+  fightElement.classList.add("slide-left");
+  createElementPickedByPlayer();
+  createElementPickedByAI();
 
-  const imageContainerElement = document.createElement("div");
-  imageContainerElement.classList.add("button__image-container");
+  document.querySelectorAll(".options button").forEach((button) => {
+    button.setAttribute("tabindex", -1);
+  });
+  document.querySelector(".result__button").setAttribute("tabindex", 0);
 
-  const imgElement = document.createElement("img");
-  imgElement.src = `./images/icon-${option}.svg`;
-  imgElement.alt = option;
+  showResult();
+};
 
-  imageContainerElement.appendChild(imgElement);
-  pickElement.appendChild(imageContainerElement);
+const showResult = () => {
+  const resultTextElement = document.querySelector(".result__text");
+  if (state.AIPick === state.playerPick) {
+    resultTextElement.innerText = "DRAW";
+  } else if (winningResultsMap[state.playerPick].includes(state.AIPick)) {
+    resultTextElement.innerText = "YOU WIN";
+    localStorage.setItem(playerWinsLSKey, state.playerWins + 1);
+    state = {
+      ...state,
+      playerWins: state.playerWins + 1,
+    };
+  } else {
+    resultTextElement.innerText = "YOU LOSE";
+    localStorage.setItem(AIWinsLSKey, state.AIWins + 1);
+    state = {
+      ...state,
+      AIWins: state.AIWins + 1,
+    };
+  }
 
-  return pickElement;
+  setTimeout(renderResult, 1000);
+
+  renderScore();
+};
+
+const renderResult = () => {
+  document.querySelector(".result").classList.add("shown");
+  document.querySelector(".pick--player").classList.add("moved");
+  document.querySelector(".pick--ai").classList.add("moved");
 };
 
 const createElementPickedByPlayer = () => {
@@ -83,47 +112,49 @@ const createElementPickedByPlayer = () => {
   const pickContainerElement = document.querySelector(
     ".pick__container--player"
   );
-  pickContainerElement.innerHTML = ""; //reset HTML
+  pickContainerElement.innerHTML = "";
   pickContainerElement.appendChild(createPickElement(playerPick));
 };
 
 const createElementPickedByAI = () => {
   const AIPick = state.AIPick;
-
   const pickContainerElement = document.querySelector(".pick__container--ai");
-  pickContainerElement.innerHTML = ""; //reset HTML
+  pickContainerElement.innerHTML = "";
   pickContainerElement.appendChild(createPickElement(AIPick));
 };
 
-const showResult = () => {
-  // console.log(winningResultsMap[state.playerPick]); // zwraca - ['paper']
+const createPickElement = (option) => {
+  const pickElement = document.createElement("div");
+  pickElement.classList.add("button", `button--${option}`);
 
-  if (state.AIPick === state.playerPick) {
-    console.log("draw");
-  } else if (winningResultsMap[state.playerPick].includes(state.AIPick)) {
-    console.log("Player wins");
-  } else {
-    console.log("AI wins");
-  }
+  const imageConatinerElement = document.createElement("div");
+  imageConatinerElement.classList.add("button__image-container");
+
+  const imgElement = document.createElement("img");
+  imgElement.src = `./images/icon-${option}.svg`;
+  imgElement.alt = option;
+
+  imageConatinerElement.appendChild(imgElement);
+
+  pickElement.appendChild(imageConatinerElement);
+
+  return pickElement;
 };
 
-const showFight = () => {
-  document.querySelector(".fight").classList.remove("hidden");
-  createElementPickedByPlayer();
-  createElementPickedByAI();
+const reset = () => {
+  const fightElement = document.querySelector(".fight");
+  fightElement.classList.remove("slide-left");
 
-  showResult();
-};
+  const optionsElement = document.querySelector(".options");
+  optionsElement.classList.remove("slide-left");
 
-const bindPickEvents = () => {
   document.querySelectorAll(".options button").forEach((button) => {
-    button.addEventListener("click", pick);
+    button.setAttribute("tabindex", 0);
   });
+  document.querySelector(".result__button").setAttribute("tabindex", -1);
 };
 
 const init = () => {
-  //ta funkcja się odpali w momęcie startu programu
-
   renderScore();
   bindPickEvents();
 };

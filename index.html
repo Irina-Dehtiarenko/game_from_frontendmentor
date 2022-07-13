@@ -11,15 +11,13 @@
       sizes="32x32"
       href="./images/favicon-32x32.png"
     />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./style.css" />
-
+    <link rel="stylesheet" href="style.css" />
     <title>Frontend Mentor | Rock, Paper, Scissors</title>
   </head>
   <body>
@@ -34,9 +32,7 @@
         <strong class="points">12</strong>
       </div>
     </header>
-
     <main>
-      <!-- widok 1 -->
       <section class="options">
         <button class="button button--paper" data-pick="paper">
           <div class="button__image-container">
@@ -48,17 +44,15 @@
             <img src="./images/icon-scissors.svg" alt="Scissors" />
           </div>
         </button>
-
         <button class="button button--rock" data-pick="rock">
           <div class="button__image-container">
             <img src="./images/icon-rock.svg" alt="Rock" />
           </div>
         </button>
       </section>
-      <!-- widok 2 -->
-      <section class="fight hidden">
-        <div class="pick">
-          <span class="pick__title"> YOU PICKED </span>
+      <section class="fight">
+        <div class="pick pick--player">
+          <span class="pick__title">YOU PICKED</span>
           <div class="pick__container pick__container--player">
             <div class="button button--paper">
               <div class="button__image-container">
@@ -67,21 +61,25 @@
             </div>
           </div>
         </div>
-
-        <div class="pick">
-          <span class="pick__title"> THE HOUSE PICKED </span>
+        <div class="pick pick--ai">
+          <span class="pick__title">THE HOUSSE PICKED</span>
           <div class="pick__container pick__container--ai"></div>
-          <!-- <div class="pick__placeholder"></div> -->
+        </div>
+
+        <div class="result">
+          <span class="result__text"></span>
+          <button class="result__button" tabindex="-1">PLAY AGAIN</button>
         </div>
       </section>
     </main>
-
     <!-- <div class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
-  </div> -->
-    <!-- to jest informacja o tym skąd wzieliśmy tą strone -->
-
-    <script src="./main.js"></script>
+            Challenge by
+            <a
+                href="https://www.frontendmentor.io?ref=challenge"
+                target="_blank"
+                >Frontend Mentor</a
+            >. Coded by <a href="#">Your Name Here</a>.
+        </div> -->
+    <script src="main.js"></script>
   </body>
 </html>

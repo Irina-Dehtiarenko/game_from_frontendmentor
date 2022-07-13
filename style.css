@@ -1,11 +1,9 @@
-/* zmienne css */
-/* pseudoselektor :root */
-/* tutaj tworzymy te zmienne */
 :root {
   --color-main: #fff;
   --color-points: hsl(229, 25%, 31%);
   --color-score: hsl(229, 64%, 46%);
   --color-border: hsl(217, 16%, 45%);
+
   --color-scissors: hsl(39, 89%, 49%), hsl(40, 84%, 53%);
   --color-paper: hsl(230, 89%, 62%), hsl(230, 89%, 65%);
   --color-rock: hsl(349, 71%, 52%), hsl(349, 70%, 56%);
@@ -16,23 +14,24 @@
   margin: 0;
   padding: 0;
 }
+
 body {
   min-height: 100vh;
-  min-width: 100wv;
+  min-width: 100vw;
   padding: 48px;
   background: radial-gradient(at top, hsl(214, 47%, 23%), hsl(237, 49%, 15%));
-  /* Sprawia, że mamy gradient zaczynający się od góy, od koloru, do koloru - okrągły */
   font-family: "Barlow Semi Condensed", sans-serif;
+  overflow: hidden;
 }
+
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   max-width: 600px;
   margin: 0 auto;
   padding: 12px 24px;
   border: solid 2px var(--color-border);
-  /* tak używamy zmiennych var(--nazwa-zmiennej) */
   border-radius: 5px;
 }
 
@@ -57,26 +56,39 @@ h1 span {
 
 .points {
   display: block;
-  font-size: 54px;
   color: var(--color-points);
+  font-size: 54px;
   line-height: 42px;
   text-align: center;
 }
 
 main {
+  position: relative;
+  min-height: 70vh;
   max-width: 600px;
   margin: 0 auto;
   padding: 160px 0;
 }
 
+section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
 .options {
   aspect-ratio: 313 / 278;
-  /* stosunek wysokości do szerokości będzie zawsze taki sam, nawet gdy zmieniamy rozmiar okna*/
-  position: relative;
   width: 50%;
   margin: 0 auto;
   background-image: url("./images/bg-triangle.svg");
   background-size: cover;
+}
+
+.options.slide-left {
+  opacity: 0;
+  transform: translate(-200%, -50%);
 }
 
 .options .button {
@@ -84,85 +96,176 @@ main {
   width: 50%;
   cursor: pointer;
 }
+
 .button {
   aspect-ratio: 1 / 1;
   display: flex;
-  justify-content: center;
   align-items: center;
-  box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.25);
+  justify-content: center;
   border: none;
   border-radius: 50%;
+  box-shadow: inset 0px -8px 0px rgba(0, 0, 0, 0.25);
 }
 
 .button img {
   width: 50%;
 }
+
 .button__image-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 80%;
   width: 80%;
   background-color: var(--color-main);
-  box-shadow: inset 0px 6px 0px rgba(0, 0, 0, 0.15);
-  /* cień od góry */
   border-radius: 50%;
+  box-shadow: inset 0px 8px 0px rgba(0, 0, 0, 0.15);
 }
+
 .button--paper {
   background: linear-gradient(var(--color-paper));
 }
+
 .button--scissors {
   background: linear-gradient(var(--color-scissors));
 }
+
 .button--rock {
   background: linear-gradient(var(--color-rock));
 }
+
 .options .button--paper {
   left: 0;
   top: 0;
   transform: translate(-50%, -50%);
-  /* procentowo odnosi siędo elementu, który pozycjonujemy*/
 }
+
 .options .button--scissors {
   right: 0;
   top: 0;
   transform: translate(50%, -50%);
 }
+
 .options .button--rock {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 50%);
 }
+
 .fight {
   display: flex;
+  align-items: center;
+  width: 100%;
   color: var(--color-main);
+  opacity: 0;
+  transform: translate(200%, -50%);
 }
-/* .fight .button {
-  width: 70%;
-} */
+
+.fight.slide-left {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
 .pick__container {
-  width: 70%;
+  width: 75%;
 }
+
 .pick {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
   width: 50%;
+  transform: translate(0, 0);
+  transition: transform 0.3s;
 }
+
+.pick--ai.moved {
+  transform: translate(25%, 0);
+}
+
+.pick--player.moved {
+  transform: translate(-25%, 0);
+}
+
 .pick__title {
   display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
   width: 100%;
   padding-bottom: 36px;
   text-align: center;
+  transform: translate(-50%, 0);
 }
+
 .pick__placeholder {
   aspect-ratio: 1 / 1;
   width: 50%;
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.15);
 }
 
 .hidden {
   display: none;
+}
+
+.result {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: scaleX(0) translate(-50%, -50%);
+  transition: transform 0.3s;
+  overflow: hidden;
+}
+
+.result.shown {
+  transform: scaleX(1) translate(-50%, -50%);
+}
+
+.result__text {
+  width: 100%;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.result__button {
+  padding: 8px 24px;
+  color: hsl(349, 71%, 52%);
+  border: none;
+  border-radius: 3px;
+}
+
+@media screen and (max-width: 480px) {
+  .score {
+    padding: 8px 12px;
+  }
+
+  .fight {
+    flex-wrap: wrap;
+  }
+
+  .pick,
+  .pick.moved,
+  .result {
+    position: relative;
+    left: 0;
+    right: 0;
+    transform: translate(0, 0);
+  }
+
+  .result {
+    width: 100%;
+    margin-top: 48px;
+    transform: translate(0, 0) scaleX(0);
+  }
+
+  .result.shown {
+    transform: translate(0, 0) scaleX(1);
+  }
 }
